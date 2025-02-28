@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'email_app',
 ]
 
 MIDDLEWARE = [
@@ -116,8 +117,43 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Login redirect
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/accounts/login/'
+
+# Message framework settings
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.DEBUG: 'secondary',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
+
+# Azure Communication Services settings
+AZURE_COMMUNICATION_CONNECTION_STRING = 'your-connection-string-here'
+# Alternative to connection string:
+# AZURE_COMMUNICATION_API_KEY = 'your-api-key-here'
+# AZURE_COMMUNICATION_ENDPOINT = 'your-endpoint-here'
+
+# Email settings
+EMAIL_HOST = 'smtp.azurecomm.net'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'your-azure-comm-username'
+EMAIL_HOST_PASSWORD = 'your-azure-comm-password'
+EMAIL_USE_TLS = True
+EMAIL_DOMAIN = 'example.com'
+
+# RoundCube settings (if using RoundCube integration)
+ROUNDCUBE_PATH = '/var/www/roundcube'  # Path to RoundCube installation
+ROUNDCUBE_URL = 'http://localhost/roundcube'  # URL to RoundCube installation

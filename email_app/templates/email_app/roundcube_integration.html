@@ -1,0 +1,78 @@
+<!-- email_app/templates/email_app/roundcube_integration.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>RoundCube Integration</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Configure RoundCube SMTP Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="configure_smtp">
+                        
+                        <div class="mb-3">
+                            <label for="smtp_server" class="form-label">SMTP Server</label>
+                            <input type="text" class="form-control" id="smtp_server" name="smtp_server" value="{{ settings.EMAIL_HOST }}">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="smtp_port" class="form-label">SMTP Port</label>
+                            <input type="number" class="form-control" id="smtp_port" name="smtp_port" value="{{ settings.EMAIL_PORT }}">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Configure RoundCube SMTP</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5>Synchronize Users</h5>
+                </div>
+                <div class="card-body">
+                    <p>Synchronize all users from Django to RoundCube.</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="sync_users">
+                        <button type="submit" class="btn btn-primary">Sync Users</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>RoundCube Access</h5>
+                </div>
+                <div class="card-body">
+                    {% if sso_url %}
+                    <p>You can access RoundCube directly without logging in:</p>
+                    <a href="{{ sso_url }}" class="btn btn-primary" target="_blank">Open RoundCube</a>
+                    {% else %}
+                    <p>Single Sign-On URL could not be generated.</p>
+                    <a href="{{ settings.ROUNDCUBE_URL }}" class="btn btn-secondary" target="_blank">Open RoundCube (Login Required)</a>
+                    {% endif %}
+                    
+                    <div class="mt-4">
+                        <h6>Alternatively, embed RoundCube in your application:</h6>
+                        <div class="embed-responsive embed-responsive-16by9">
+                            {% if sso_url %}
+                            <iframe src="{{ sso_url }}" class="embed-responsive-item border w-100" style="height: 500px;"></iframe>
+                            {% else %}
+                            <p>Please configure SSO to embed RoundCube.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

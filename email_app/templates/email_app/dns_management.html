@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>DNS Record Management</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>MX Record</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ mx_form.mail_server.id_for_label }}" class="form-label">Mail Server</label>
+                            {{ mx_form.mail_server }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ mx_form.priority.id_for_label }}" class="form-label">Priority</label>
+                            {{ mx_form.priority }}
+                        </div>
+                        
+                        <button type="submit" name="create_mx" class="btn btn-primary">Create MX Record</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>SPF Record</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ spf_form.allowed_servers.id_for_label }}" class="form-label">Allowed Servers</label>
+                            {{ spf_form.allowed_servers }}
+                        </div>
+                        
+                        <button type="submit" name="create_spf" class="btn btn-primary">Create SPF Record</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>DKIM Record</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ dkim_form.selector.id_for_label }}" class="form-label">Selector</label>
+                            {{ dkim_form.selector }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ dkim_form.dkim_value.id_for_label }}" class="form-label">DKIM Value</label>
+                            {{ dkim_form.dkim_value }}
+                        </div>
+                        
+                        <button type="submit" name="create_dkim" class="btn btn-primary">Create DKIM Record</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5>DNS Records</h5>
+                    <form method="post" class="m-0">
+                        {% csrf_token %}
+                        <button type="submit" name="verify_dns" class="btn btn-primary btn-sm">Verify DNS Records</button>
+                    </form>
+                </div>
+                <div class="card-body">
+                    {% if verification_results %}
+                    <div class="alert alert-info">
+                        <h6>Verification Results:</h6>
+                        <ul>
+                            {% for result in verification_results %}
+                            <li>{{ result }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Domain</th>
+                                <th>Type</th>
+                                <th>Value</th>
+                                <th>Created At</th>
+                                <th>Verified</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in dns_records %}
+                            <tr>
+                                <td>{{ record.domain }}</td>
+                                <td>{{ record.get_record_type_display }}</td>
+                                <td>{{ record.value }}</td>
+                                <td>{{ record.created_at }}</td>
+                                <td>
+                                    {% if record.verified %}
+                                    <span class="badge bg-success">Verified</span>
+                                    {% else %}
+                                    <span class="badge bg-warning">Not Verified</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No DNS records created yet</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Send Email</h1>
+    
+    <div class="card mt-4">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="{{ form.sender.id_for_label }}" class="form-label">Sender Email</label>
+                    {{ form.sender }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.recipients.id_for_label }}" class="form-label">Recipients</label>
+                    {{ form.recipients }}
+                    <div class="form-text">Enter email addresses, one per line or comma-separated.</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.subject.id_for_label }}" class="form-label">Subject</label>
+                    {{ form.subject }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.body.id_for_label }}" class="form-label">Plain Text Body</label>
+                    {{ form.body }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.html_body.id_for_label }}" class="form-label">HTML Body (Optional)</label>
+                    {{ form.html_body }}
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="use_direct_api" name="use_direct_api">
+                    <label class="form-check-label" for="use_direct_api">Use Direct API (instead of SMTP)</label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Send Email</button>
+                <a href="{% url 'index' %}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
